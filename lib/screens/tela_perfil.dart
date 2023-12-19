@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'tela_vocabulario.dart';
 
 class TelaPerfil extends StatefulWidget {
   final String nivel;
@@ -10,7 +11,6 @@ class TelaPerfil extends StatefulWidget {
 }
 
 class _TelaPerfilState extends State<TelaPerfil> {
-  // Informações fictícias do usuário
   String nomeUsuario = 'Nome do Usuário';
   String emailUsuario = 'usuario@email.com';
 
@@ -35,12 +35,6 @@ class _TelaPerfilState extends State<TelaPerfil> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            CircleAvatar(
-              radius: 50,
-              // Adicione a imagem do perfil aqui
-              backgroundImage: AssetImage('assets/profile_image.jpg'),
-            ),
-            SizedBox(height: 20),
             TextFormField(
               controller: _controllerNome,
               decoration: InputDecoration(
@@ -59,7 +53,6 @@ class _TelaPerfilState extends State<TelaPerfil> {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Atualizar informações do perfil
                 setState(() {
                   nomeUsuario = _controllerNome.text;
                   emailUsuario = _controllerEmail.text;
@@ -82,7 +75,19 @@ class _TelaPerfilState extends State<TelaPerfil> {
             Text('E-mail: $emailUsuario'),
             SizedBox(height: 10),
             Text(
-                'Nível: ${widget.nivel}'), // Adicione esta linha para exibir o nível
+              'Nível: ${widget.nivel}',
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TelaVocabulario(nivel: widget.nivel),
+                  ),
+                );
+              },
+              child: Text('Ir para Vocabulário'),
+            ),
           ],
         ),
       ),

@@ -13,11 +13,10 @@ class _TelaQuizState extends State<TelaQuiz> {
       'pergunta': 'O que significa a palavra "apple"?',
       'resposta': 'Maçã',
     },
-    // ... outras perguntas
   ];
 
   int indexPergunta = 0;
-  int pontuacao = 0; // Adicione esta linha para a pontuação
+  int pontuacao = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +48,20 @@ class _TelaQuizState extends State<TelaQuiz> {
               },
               child: Text('Falso'),
             ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TelaProgresso(
+                      pontuacaoTotal: pontuacao,
+                      totalPerguntas: perguntasRespostas.length,
+                    ),
+                  ),
+                );
+              },
+              child: Text('Ver Progresso'),
+            ),
           ],
         ),
       ),
@@ -59,7 +72,6 @@ class _TelaQuizState extends State<TelaQuiz> {
     bool respostaCorretaBool =
         respostaUsuario == (respostaCorreta.toLowerCase() == 'verdadeiro');
 
-    // Lógica para mostrar feedback, pontuação, etc.
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -70,7 +82,7 @@ class _TelaQuizState extends State<TelaQuiz> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Fecha o diálogo
+                Navigator.of(context).pop();
               },
               child: Text('OK'),
             ),
@@ -79,16 +91,13 @@ class _TelaQuizState extends State<TelaQuiz> {
       },
     );
 
-    // Atualiza a pontuação
     if (respostaCorretaBool) {
-      pontuacao++; // Aumenta a pontuação se a resposta estiver correta
+      pontuacao++;
     }
 
-    // Avança para a próxima pergunta
     setState(() {
       indexPergunta++;
       if (indexPergunta >= perguntasRespostas.length) {
-        // Todas as perguntas foram respondidas
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

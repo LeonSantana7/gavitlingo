@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'tela_quiz.dart'; // Importe a tela de quiz
+import 'tela_quiz.dart';
 
 class TelaVocabulario extends StatelessWidget {
   final String nivel;
@@ -65,6 +65,15 @@ class TelaVocabulario extends StatelessWidget {
                 );
               },
               child: Text('Iniciar Quiz'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TelaQuiz()),
+                );
+              },
+              child: Text('Ir para Quiz'),
             ),
           ],
         ),

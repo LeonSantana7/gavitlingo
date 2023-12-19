@@ -1,29 +1,34 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppLocalizations {
-  static Map<String, Map<String, String>> _localizedValues = {
-    'en': {
-      'hello': 'Hello',
-      // outras mensagens em inglês...
-    },
-    'pt': {
-      'hello': 'Olá',
-      // outras mensagens em português...
-    },
-    // adicione mais idiomas conforme necessário...
-  };
+  late Map<String, String> _localizedStrings;
 
-  static String? of(BuildContext context, String key) {
-    // Recupere o código do idioma atual
-    final locale = Localizations.localeOf(context).languageCode;
+  AppLocalizations(Locale locale) {
+    _localizedStrings = <String, String>{};
+  }
 
-    // Verifique se a chave está presente no idioma atual
-    if (_localizedValues[locale]?.containsKey(key) ?? false) {
-      return _localizedValues[locale]![key];
+  Future<bool> load() async {
+    try {
+      final jsonString =
+          await rootBundle.loadString('assets/intl_messages.arb');
+      final Map<String, dynamic> jsonMap = json.decode(jsonString);
+      _localizedStrings =
+          jsonMap.map((key, value) => MapEntry(key, value.toString()));
+      return true;
+    } catch (e) {
+      print('Error loading localization: $e');
+      return false;
     }
+  }
 
-    // Se a chave não estiver presente, retorne a chave como padrão
-    return key;
+  String translate(String key) {
+    return _localizedStrings[key] ?? key;
+  }
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 }
 
@@ -37,9 +42,13 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   Future<AppLocalizations> load(Locale locale) async {
-    return AppLocalizations();
+    final appLocalizations = AppLocalizations(locale);
+    await appLocalizations.load();
+    return appLocalizations;
   }
 
   @override
-  bool shouldReload(AppLocalizationsDelegate old) => false;
+  bool shouldReload(covariant LocalizationsDelegate<AppLocalizations> old) {
+    return false;
+  }
 }

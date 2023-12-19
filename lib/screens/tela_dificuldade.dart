@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'tela_perfil.dart';
-import 'tela_progresso.dart'; // Importe a tela de progresso
+import 'tela_progresso.dart';
 
 class TelaDificuldade extends StatelessWidget {
   @override
@@ -14,8 +14,6 @@ class TelaDificuldade extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text('Escolha o seu nível de dificuldade'),
-
-            // Botões para diferentes níveis de dificuldade
             ElevatedButton(
               onPressed: () {
                 _irParaTelaPerfil(context, 'Iniciante');

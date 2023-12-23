@@ -2,21 +2,43 @@ import 'package:flutter/material.dart';
 import 'tela_progresso.dart';
 
 class TelaQuiz extends StatefulWidget {
+  final List<String> vocabulario;
+
+  const TelaQuiz({Key? key, required this.vocabulario}) : super(key: key);
+
   @override
-  _TelaQuizState createState() => _TelaQuizState();
+  TelaQuizState createState() => TelaQuizState();
 }
 
-class _TelaQuizState extends State<TelaQuiz> {
-  final List<Map<String, String>> perguntasRespostas = [
-    {
-      'palavra': 'apple',
-      'pergunta': 'O que significa a palavra "apple"?',
-      'resposta': 'Maçã',
-    },
-  ];
-
+class TelaQuizState extends State<TelaQuiz>
+    with SingleTickerProviderStateMixin {
+  late List<Map<String, String>> perguntasRespostas;
   int indexPergunta = 0;
   int pontuacao = 0;
+
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    perguntasRespostas = gerarPerguntas();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500), // Use const here
+    );
+    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
+  }
+
+  List<Map<String, String>> gerarPerguntas() {
+    return widget.vocabulario.map((palavra) {
+      return {
+        'palavra': palavra,
+        'pergunta': 'O que significa a palavra "$palavra"?',
+        'resposta': 'Tradução de $palavra',
+      };
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +46,7 @@ class _TelaQuizState extends State<TelaQuiz> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Teste de Compreensão'),
+        title: const Text('Teste de Compreensão'),
       ),
       body: Center(
         child: Column(
@@ -32,21 +54,21 @@ class _TelaQuizState extends State<TelaQuiz> {
           children: [
             Text(
               perguntaResposta['pergunta']!,
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 18),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 verificarResposta(true, perguntaResposta['resposta']!);
               },
-              child: Text('Verdadeiro'),
+              child: const Text('Verdadeiro'),
             ),
             ElevatedButton(
               onPressed: () {
                 verificarResposta(false, perguntaResposta['resposta']!);
               },
-              child: Text('Falso'),
+              child: const Text('Falso'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -60,7 +82,19 @@ class _TelaQuizState extends State<TelaQuiz> {
                   ),
                 );
               },
-              child: Text('Ver Progresso'),
+              child: const Text('Ver Progresso'),
+            ),
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) {
+                return Opacity(
+                  opacity: _animation.value,
+                  child: const Text(
+                    'Resposta Correta!',
+                    style: TextStyle(fontSize: 20, color: Colors.green),
+                  ),
+                );
+              },
             ),
           ],
         ),
@@ -84,7 +118,7 @@ class _TelaQuizState extends State<TelaQuiz> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         );
@@ -93,6 +127,7 @@ class _TelaQuizState extends State<TelaQuiz> {
 
     if (respostaCorretaBool) {
       pontuacao++;
+      _animationController.forward(from: 0);
     }
 
     setState(() {

@@ -2,36 +2,41 @@ import 'package:flutter/material.dart';
 import 'tela_dificuldade.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Gavitlingo',
       theme: ThemeData(
-        primaryColor: Colors.teal,
+        colorScheme: const ColorScheme.light(primary: Colors.teal),
         fontFamily: 'Montserrat',
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: Colors.amber,
-            onPrimary: Colors.white,
+            backgroundColor: Colors.amber,
+            foregroundColor:
+                Colors.white, // Substituir 'onPrimary' por 'foregroundColor'
             elevation: 3,
           ),
         ),
       ),
-      home: TelaBoasVindas(),
+      home: const TelaBoasVindas(),
     );
   }
 }
 
 class TelaBoasVindas extends StatelessWidget {
+  const TelaBoasVindas({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Bem-vindo ao Gavitlingo',
           style: TextStyle(
             fontFamily: 'Montserrat',
@@ -43,7 +48,7 @@ class TelaBoasVindas extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Gavitlingo',
               style: TextStyle(
                 fontSize: 40,
@@ -52,12 +57,12 @@ class TelaBoasVindas extends StatelessWidget {
                 fontFamily: 'Montserrat',
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 _irParaTelaDificuldade(context);
               },
-              child: Text(
+              child: const Text(
                 'Escolha a dificuldade',
                 style: TextStyle(
                   fontSize: 16,
@@ -72,11 +77,10 @@ class TelaBoasVindas extends StatelessWidget {
     );
   }
 
-  // Função para navegar para a tela de dificuldade
   void _irParaTelaDificuldade(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TelaDificuldade()),
+      MaterialPageRoute(builder: (context) => const TelaDificuldade()),
     );
   }
 }

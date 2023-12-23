@@ -3,9 +3,9 @@ import 'tela_vocabulario.dart';
 
 class TelaPerfil extends StatefulWidget {
   final String nivel;
-  final List<String>? vocabulario; // Alteração: lista de vocabulário é opcional
+  final List<String> vocabulario; // Adicione esta linha
 
-  const TelaPerfil({Key? key, required this.nivel, this.vocabulario})
+  const TelaPerfil({Key? key, required this.nivel, required this.vocabulario})
       : super(key: key);
 
   @override
@@ -16,11 +16,14 @@ class TelaPerfilState extends State<TelaPerfil> {
   late final TextEditingController _controllerNome;
   late final TextEditingController _controllerEmail;
 
+  String nomeUsuario = 'Nome do Usuário';
+  String emailUsuario = 'usuario@email.com';
+
   @override
   void initState() {
     super.initState();
-    _controllerNome = TextEditingController(text: 'Nome do Usuário');
-    _controllerEmail = TextEditingController(text: 'usuario@email.com');
+    _controllerNome = TextEditingController(text: nomeUsuario);
+    _controllerEmail = TextEditingController(text: emailUsuario);
   }
 
   @override
@@ -59,6 +62,10 @@ class TelaPerfilState extends State<TelaPerfil> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
+                setState(() {
+                  nomeUsuario = _controllerNome.text;
+                  emailUsuario = _controllerEmail.text;
+                });
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Perfil atualizado com sucesso!'),
@@ -73,27 +80,27 @@ class TelaPerfilState extends State<TelaPerfil> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
-            Text('Nome: ${_controllerNome.text}'),
-            Text('E-mail: ${_controllerEmail.text}'),
+            Text('Nome: $nomeUsuario'),
+            Text('E-mail: $emailUsuario'),
             const SizedBox(height: 10),
             Text(
               'Nível: ${widget.nivel}',
             ),
-            if (widget.vocabulario != null)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TelaVocabulario(
-                        nivel: widget.nivel,
-                        vocabulario: widget.vocabulario!,
-                      ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TelaVocabulario(
+                      nivel: widget.nivel,
+                      vocabulario:
+                          widget.vocabulario, // Passe a lista de vocabulário
                     ),
-                  );
-                },
-                child: const Text('Ir para Vocabulário'),
-              ),
+                  ),
+                );
+              },
+              child: const Text('Ir para Vocabulário'),
+            ),
           ],
         ),
       ),

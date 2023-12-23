@@ -1,36 +1,38 @@
 import 'package:flutter/material.dart';
 import 'tela_perfil.dart';
-import 'tela_progresso.dart';
 
 class TelaDificuldade extends StatelessWidget {
+  const TelaDificuldade({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Seleção de Nível de Dificuldade'),
+        title: const Text('Seleção de Nível de Dificuldade'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Escolha o seu nível de dificuldade'),
+            const Text('Escolha o seu nível de dificuldade'),
             ElevatedButton(
               onPressed: () {
-                _irParaTelaPerfil(context, 'Iniciante');
+                _irParaTelaPerfil(context, 'Iniciante', vocabularioIniciante);
               },
-              child: Text('Iniciante'),
+              child: const Text('Iniciante'),
             ),
             ElevatedButton(
               onPressed: () {
-                _irParaTelaPerfil(context, 'Intermediário');
+                _irParaTelaPerfil(
+                    context, 'Intermediário', vocabularioIntermediario);
               },
-              child: Text('Intermediário'),
+              child: const Text('Intermediário'),
             ),
             ElevatedButton(
               onPressed: () {
-                _irParaTelaPerfil(context, 'Avançado');
+                _irParaTelaPerfil(context, 'Avançado', vocabularioAvancado);
               },
-              child: Text('Avançado'),
+              child: const Text('Avançado'),
             ),
           ],
         ),
@@ -38,13 +40,19 @@ class TelaDificuldade extends StatelessWidget {
     );
   }
 
-  // Função para navegar para a tela de perfil com o nível selecionado
-  void _irParaTelaPerfil(BuildContext context, String nivel) {
+  void _irParaTelaPerfil(
+      BuildContext context, String nivel, List<String> vocabulario) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TelaPerfil(nivel: nivel),
+        builder: (context) =>
+            TelaPerfil(nivel: nivel, vocabulario: vocabulario),
       ),
     );
   }
 }
+
+// Defina os vocabulários correspondentes
+List<String> vocabularioIniciante = ['palavra1', 'palavra2', 'palavra3'];
+List<String> vocabularioIntermediario = ['palavra4', 'palavra5', 'palavra6'];
+List<String> vocabularioAvancado = ['palavra7', 'palavra8', 'palavra9'];

@@ -33,6 +33,9 @@ dependencies:
   intl_translation: ^0.18.2
   flutter_localizations:
     sdk: flutter
+  logger: ^2.0.2+1
+  sqflite: ^2.0.0
+  path: ^1.8.0
 
 
 

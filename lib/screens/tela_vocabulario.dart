@@ -4,26 +4,18 @@ import 'tela_quiz.dart';
 
 class TelaVocabulario extends StatelessWidget {
   final String nivel;
+  final List<String> vocabulario;
 
-  TelaVocabulario({required this.nivel});
-
-  List<String> palavras = [
-    'apple',
-    'banana',
-    'car',
-    'house',
-    'sun',
-    'flower',
-    'computer',
-    'programming',
-    'flutter',
-    'learning',
-  ];
+  const TelaVocabulario({
+    Key? key,
+    required this.nivel,
+    required this.vocabulario,
+  }) : super(key: key);
 
   String gerarPalavra() {
     int comprimentoMinimo =
         nivel == 'Iniciante' ? 4 : (nivel == 'Intermediário' ? 6 : 8);
-    List<String> palavrasDisponiveis = palavras
+    List<String> palavrasDisponiveis = vocabulario
         .where((palavra) => palavra.length >= comprimentoMinimo)
         .toList();
     if (palavrasDisponiveis.isNotEmpty) {
@@ -37,10 +29,13 @@ class TelaVocabulario extends StatelessWidget {
   Widget build(BuildContext context) {
     String palavra = gerarPalavra();
 
+    // Obtém a instância de AppLocalizations
+    AppLocalizations? appLocalizations = AppLocalizations.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.aprenderVocabulario(nivel),
+          appLocalizations?.aprenderVocabulario(nivel) ?? '',
         ),
       ),
       body: Center(
@@ -48,32 +43,40 @@ class TelaVocabulario extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              AppLocalizations.of(context)!.telaVocabulario(nivel),
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              appLocalizations?.telaVocabulario(nivel) ?? '',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
-              AppLocalizations.of(context)!.palavra(palavra),
-              style: TextStyle(fontSize: 18),
+              appLocalizations?.palavra(palavra) ?? '',
+              style: const TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TelaQuiz()),
+                  MaterialPageRoute(
+                    builder: (context) => TelaQuiz(
+                      vocabulario: vocabulario,
+                    ),
+                  ),
                 );
               },
-              child: Text('Iniciar Quiz'),
+              child: const Text('Iniciar Quiz'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => TelaQuiz()),
+                  MaterialPageRoute(
+                    builder: (context) => TelaQuiz(
+                      vocabulario: vocabulario,
+                    ),
+                  ),
                 );
               },
-              child: Text('Ir para Quiz'),
+              child: const Text('Ir para Quiz'),
             ),
           ],
         ),

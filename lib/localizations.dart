@@ -1,30 +1,60 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
+import 'dart:io'
+    show FileSystemException; // Importe FileSystemException desta forma
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppLocalizations {
-  late Map<String, String> _localizedStrings;
+  Map<String, String>? _localizedStrings;
 
   AppLocalizations(Locale locale) {
-    _localizedStrings = <String, String>{};
+    // Adicione o código a seguir para garantir que o idioma seja suportado
+    final supportedLocale = _isLocaleSupported(locale)
+        ? locale
+        : const Locale('en'); // ou outro idioma padrão
+
+    _load(supportedLocale);
   }
 
-  Future<bool> load() async {
+  Future<void> _load(Locale locale) async {
     try {
       final jsonString =
           await rootBundle.loadString('assets/intl_messages.arb');
       final Map<String, dynamic> jsonMap = json.decode(jsonString);
       _localizedStrings =
           jsonMap.map((key, value) => MapEntry(key, value.toString()));
+    } catch (e, stackTrace) {
+      if (e is FormatException) {
+        // Lida com erro de formato inválido
+      } else if (e is FileSystemException) {
+        // Lida com erro de sistema de arquivos
+      } else {
+        // Outros erros
+        developer.log('Error loading localization',
+            error: e, stackTrace: stackTrace);
+      }
+      _localizedStrings = null; // Deixe como nulo em caso de erro
+    }
+  }
+
+  Future<bool> load(Locale locale) async {
+    try {
+      await _load(locale);
       return true;
     } catch (e) {
-      print('Error loading localization: $e');
       return false;
     }
   }
 
+  bool _isLocaleSupported(Locale locale) {
+    return ['en', 'pt'].contains(locale.languageCode);
+  }
+
   String translate(String key) {
-    return _localizedStrings[key] ?? key;
+    return _localizedStrings?.containsKey(key) == true
+        ? _localizedStrings![key]!
+        : '[$key]';
   }
 
   static AppLocalizations of(BuildContext context) {
@@ -42,9 +72,7 @@ class AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   @override
   Future<AppLocalizations> load(Locale locale) async {
-    final appLocalizations = AppLocalizations(locale);
-    await appLocalizations.load();
-    return appLocalizations;
+    return AppLocalizations(locale);
   }
 
   @override

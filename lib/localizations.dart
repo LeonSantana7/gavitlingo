@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as developer;
-import 'dart:io'
-    show FileSystemException; // Importe FileSystemException desta forma
+import 'dart:io' show FileSystemException;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,7 +8,6 @@ class AppLocalizations {
   Map<String, String>? _localizedStrings;
 
   AppLocalizations(Locale locale) {
-    // Adicione o código a seguir para garantir que o idioma seja suportado
     final supportedLocale = _isLocaleSupported(locale)
         ? locale
         : const Locale('en'); // ou outro idioma padrão
@@ -22,8 +20,8 @@ class AppLocalizations {
       final jsonString =
           await rootBundle.loadString('assets/intl_messages.arb');
       final Map<String, dynamic> jsonMap = json.decode(jsonString);
-      _localizedStrings =
-          jsonMap.map((key, value) => MapEntry(key, value.toString()));
+      _localizedStrings = Map<String, String>.from(
+          jsonMap.map((key, value) => MapEntry(key, value.toString())));
     } catch (e, stackTrace) {
       if (e is FormatException) {
         // Lida com erro de formato inválido
@@ -34,7 +32,7 @@ class AppLocalizations {
         developer.log('Error loading localization',
             error: e, stackTrace: stackTrace);
       }
-      _localizedStrings = null; // Deixe como nulo em caso de erro
+      _localizedStrings = null;
     }
   }
 
@@ -55,6 +53,30 @@ class AppLocalizations {
     return _localizedStrings?.containsKey(key) == true
         ? _localizedStrings![key]!
         : '[$key]';
+  }
+
+  String translateLevel(String level) {
+    switch (level) {
+      case 'Beginner':
+        return 'Iniciante';
+      case 'Intermediate':
+        return 'Intermediário';
+
+      default:
+        return level;
+    }
+  }
+
+  String translateVocabularyLearning(String level) {
+    return translate('vocabulary_learning_${translateLevel(level)}');
+  }
+
+  String translateVocabularyScreen(String level) {
+    return translate('vocabulary_screen_${translateLevel(level)}');
+  }
+
+  String translateWord(String word) {
+    return translate('word_$word');
   }
 
   static AppLocalizations of(BuildContext context) {

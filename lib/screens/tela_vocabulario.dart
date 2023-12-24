@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'tela_quiz.dart';
+import 'package:gavitlingo/localizations.dart';
 
 class TelaVocabulario extends StatelessWidget {
   final String nivel;
@@ -30,12 +31,14 @@ class TelaVocabulario extends StatelessWidget {
     String palavra = gerarPalavra();
 
     // Obtém a instância de AppLocalizations
-    AppLocalizations? appLocalizations = AppLocalizations.of(context);
+    AppLocalizations appLocalizations = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          appLocalizations?.aprenderVocabulario(nivel) ?? '',
+          appLocalizations.translateVocabularyLearning(
+            appLocalizations.translateLevel(nivel),
+          ),
         ),
       ),
       body: Center(
@@ -43,12 +46,14 @@ class TelaVocabulario extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              appLocalizations?.telaVocabulario(nivel) ?? '',
+              appLocalizations.translateVocabularyScreen(
+                appLocalizations.translateLevel(nivel),
+              ),
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Text(
-              appLocalizations?.palavra(palavra) ?? '',
+              appLocalizations.translateWord(palavra),
               style: const TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 20),
@@ -82,23 +87,5 @@ class TelaVocabulario extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class AppLocalizations {
-  static AppLocalizations? of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations);
-  }
-
-  String aprenderVocabulario(String nivel) {
-    return 'Aprender Vocabulário - $nivel';
-  }
-
-  String telaVocabulario(String nivel) {
-    return 'Tela de Vocabulário - Nível: $nivel';
-  }
-
-  String palavra(String palavra) {
-    return 'Palavra: $palavra';
   }
 }
